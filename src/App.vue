@@ -1,12 +1,20 @@
 <template>
   <div id="app">
+    <h1>All destinations</h1>
+    <div>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/hobbies">Hobbies</router-link>
+      <router-link to="/hobbies">Hobbies</router-link> |
+      <router-link to="/brazil">Brazil</router-link> |
+      <router-link to="/jamaica">Jamaica</router-link> |
+      <router-link to="/hawaii">Hawaii</router-link> |
+      <router-link to="/panama">Panama</router-link>
     </div>
+    <router-view />
     <div>
-      Completed todos: {{doneTodosCount}}
+      {{ count }}
+    </div>
     </div>
   </div>
 </template>
@@ -14,12 +22,13 @@
 <script>
 import Vue from "vue";
 import Vuex from "vuex";
-// import { mapState } from "vuex";
+import { mapState } from "vuex";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
+    count: 3,
     todos: [
       { id: 1, text: "...", done: true },
       { id: 2, text: "...", done: false },
@@ -33,13 +42,15 @@ const store = new Vuex.Store({
       return getters.doneTodos.length;
     },
     getTodoById: (state) => (id) => {
-      return state.todos.find(todo => todo.id === id)
-    }
+      return state.todos.find((todo) => todo.id === id);
+    },
   },
-  count: 3,
   mutations: {
     increment(state) {
       state.count++;
+    },
+    incrementBy (state, payload) {
+      state.count += payload.amount;
     },
   },
 });
@@ -52,23 +63,20 @@ export default {
       localCount: 4,
     };
   },
-computed: {
-    doneTodosCount() {
-      return this.$store.getters.doneTodosCount
-    },
-    getTodoById() {
-      return this.$store.getters.getTodoById
-    },
-    doneTodos() {
-      return this.$store.getters.doneTodos
-    },
-},
+  computed: mapState([
+   'count'
+  ]),
 };
 
-console.log(store.getters.doneTodos);
-console.log(store.getters.doneTodosCount)
-console.log(store.getters.getTodoById(2));
+store.commit("incrementBy", {amount: 30});
+console.log(store.state.count);
+
+//
+// console.log(store.getters.doneTodos);
+// console.log(store.getters.doneTodosCount)
+// console.log(store.getters.getTodoById(2));
 </script>
+
 
 <style>
 #app {
@@ -93,15 +101,24 @@ console.log(store.getters.getTodoById(2));
 }
 </style>
 
-<!--computed: mapState(["count"]),-->
+
+<!--count: (state) => state.count,-->
+<!--countAlias: "count",-->
+<!--countPlusLocalState(state) {-->
+<!--return state.count + this.localCount;-->
+<!--},-->
 
 <!--{-->
-<!--count: state => state.count,-->
-<!--countAlias: 'count',-->
-<!--countPlusLocalState (state) {-->
-<!--return state.count + this.localCount;-->
-<!--}-->
-<!--}-->
+<!--doneTodosCount() {-->
+<!--return this.$store.getters.doneTodosCount-->
+<!--},-->
+<!--getTodoById() {-->
+<!--return this.$store.getters.getTodoById-->
+<!--},-->
+<!--doneTodos() {-->
+<!--return this.$store.getters.doneTodos-->
+<!--},-->
+<!--},-->
 
 // methods: { // increment() { // this.$store.commit("increment"); //
 console.log(this.$store.state.count); // } // }
