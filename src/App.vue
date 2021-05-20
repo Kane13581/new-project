@@ -5,31 +5,69 @@
       <router-link to="/about">About</router-link> |
       <router-link to="/hobbies">Hobbies</router-link>
     </div>
-    <router-view />
+    <div>
+      Completed todos: {{doneTodosCount}}
+    </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import Vuex from "vuex";
+// import { mapState } from "vuex";
 
+Vue.use(Vuex);
 
-
-
-
+const store = new Vuex.Store({
+  state: {
+    todos: [
+      { id: 1, text: "...", done: true },
+      { id: 2, text: "...", done: false },
+    ],
+  },
+  getters: {
+    doneTodos: (state) => {
+      return state.todos.filter((todo) => todo.done);
+    },
+    doneTodosCount: (state, getters) => {
+      return getters.doneTodos.length;
+    },
+    getTodoById: (state) => (id) => {
+      return state.todos.find(todo => todo.id === id)
+    }
+  },
+  count: 3,
+  mutations: {
+    increment(state) {
+      state.count++;
+    },
+  },
+});
 
 export default {
   name: "App",
-  components: {
-
-  },
-  props: {
-  },
+  store: store,
   data() {
     return {
-      counter: 0,
-    }
+      localCount: 4,
+    };
   },
-}
+computed: {
+    doneTodosCount() {
+      return this.$store.getters.doneTodosCount
+    },
+    getTodoById() {
+      return this.$store.getters.getTodoById
+    },
+    doneTodos() {
+      return this.$store.getters.doneTodos
+    },
+},
+};
 
+console.log(store.getters.doneTodos);
+console.log(store.getters.doneTodosCount)
+console.log(store.getters.getTodoById(2));
 </script>
 
 <style>
@@ -54,3 +92,16 @@ export default {
   color: #42b983;
 }
 </style>
+
+<!--computed: mapState(["count"]),-->
+
+<!--{-->
+<!--count: state => state.count,-->
+<!--countAlias: 'count',-->
+<!--countPlusLocalState (state) {-->
+<!--return state.count + this.localCount;-->
+<!--}-->
+<!--}-->
+
+// methods: { // increment() { // this.$store.commit("increment"); //
+console.log(this.$store.state.count); // } // }
