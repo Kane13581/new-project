@@ -1,31 +1,25 @@
 <template>
   <div class="home">
-    <div v-for="destination in destinations" :key="destination.name">
-      <router-link :to="destination.slug">
-      <h2>{{destination.slug}}</h2>
+    <h1>All destinations</h1>
+    <div v-for="(destination, index) in destinations" :key="index">
+      <router-link :to="`/countries/${destination.id}`">
+        {{ destination.name }}
       </router-link>
     </div>
-    <figure>
-      <router-link :to="destination.name">
-        `${destination.name}`
-      </router-link>
-    </figure>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import store from "./store";
 
 export default {
-  name: "home",
-  components: {
-
-  },
+  name: "Home",
+  components: {},
   data() {
     return {
-
-    }
+      destinations: store.destinations
+    };
   }
 };
 </script>
